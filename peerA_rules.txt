@@ -1,0 +1,21 @@
+#local rules
+L1: a_local, b_local -> x_local
+L2: ->~q_local
+L3: ->b_local
+L4: ->a_local
+
+#remote rules
+M1: chainB_peerB -> chainA_peerA
+M5: chainB_peerB -> chain2_peerA
+M2: toB_peerB, a_peerA -> toA_peerA
+M3: toB_peerB -> g_peerA
+#M4: p_peerC  -> ~g_peerA
+M4: p_peerC, toC_peerC -> ~g_peerA
+M6: p_peerC, q_peerA -> test_peerA
+M7: toC_peerC, ~p_peerC -> mine_peerA
+
+#O que poderia ter:
+# M8: chainB_ANY -> chainA_peerA  ;chain é afirmado se qualquer agente afirma chainB
+# M9: chainB_SC_X1 -> chainA_peerA ;chain é afirmado se algum agente similar a B afir chainB. Neste caso, definir similaridade
+# em caso de similaridades, grau de similaridades pode ser usado na resolução de conflitos
+

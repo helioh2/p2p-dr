@@ -45,6 +45,8 @@ class Context:
         self.name = name
         self.preferences = preferences
         self.vocabulary = set()
+        self.local_strict_rules = set()
+        self.defeasible_rules = set()
 
     def __str__(self):
         return self.name
@@ -157,11 +159,13 @@ class DefeasibleRule(Rule):
     def __init__(self, *args, **kwargs):
         Rule.__init__(self, *args, **kwargs)     
         self.head.defeasible_rules.add(self)
+        self.head.context.defeasible_rules.add(self)
 
 class LocalStrictRule(Rule):
     def __init__(self, *args, **kwargs):
         Rule.__init__(self, *args, **kwargs)
         self.head.local_strict_rules.add(self)
+        self.head.context.defeasible_rules.add(self)
 
 
 def p2p_dr(p, context_0):
@@ -198,6 +202,10 @@ def p2p_dr(p, context_0):
         if context_0 != p.context:
             p.supportive_set = p.blocking_set = set()
         return TruthValue.UNDEFINED
+
+
+# FAZER PARSER DE ARQUIVO!!
+
 
 
 
