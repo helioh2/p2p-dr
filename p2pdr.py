@@ -3,7 +3,7 @@ from enum import Enum
 
 
 def rank(p, preferences):
-    return 0 if p.context not in preferences else preferences.index(p.context)
+    return 0 if p.context not in preferences else preferences.index(p.context) + 1
 
 def stronger(set_a, set_b, preferences):
     
@@ -41,16 +41,26 @@ class TruthValue(Enum):
     UNDEFINED = 3
 
 class Context:
-    def __init__(self, name, preferences=[], vocabulary=set()):
+    def __init__(self, name, preferences=[]):
         self.name = name
         self.preferences = preferences
-        self.vocabulary = vocabulary
+        self.vocabulary = set()
+
+    def __str__(self):
+        return self.name
+
+    def __eq__(self, other):
+        return self.name == other
+
+    def __hash__(self):
+        return hash(self.name)
 
 
 class Literal:
     def __init__(self, name, context, negation=False):
         self.name = name
         self.context = context
+        self.context.vocabulary.add(self)
         self.local_strict_rules = set()
         self.defeasible_rules = set()
         if not negation:
@@ -70,6 +80,8 @@ class Literal:
         return self.local_strict_rules | self.defeasible_rules
 
     def local_alg(self):
+        if not self.local_strict_rules:
+            return False
         for r in self.local_strict_rules:
             for b in r.body:
                 local_ans_b = b.local_alg()
@@ -91,12 +103,20 @@ class Literal:
                 sup = True
         return sup, unb
 
+    def __str__(self):
+        return self.name
+
+    def __eq__(self, other):
+        return self.name == other
+
+    def __hash__(self):
+        return hash(self.name)
+
 
 class Rule:
     def __init__(self, head, body=set()):
-        self.head = head
-        self.head.rules.add(self)
         self.body = body
+        self.head = head
         self.cycle = False
         self.reset()
 
@@ -132,6 +152,16 @@ class Rule:
         return True
 
 
+
+class DefeasibleRule(Rule):
+    def __init__(self, *args, **kwargs):
+        Rule.__init__(self, *args, **kwargs)     
+        self.head.defeasible_rules.add(self)
+
+class LocalStrictRule(Rule):
+    def __init__(self, *args, **kwargs):
+        Rule.__init__(self, *args, **kwargs)
+        self.head.local_strict_rules.add(self)
 
 
 def p2p_dr(p, context_0):
@@ -170,6 +200,41 @@ def p2p_dr(p, context_0):
         return TruthValue.UNDEFINED
 
 
+
+
+
+#MAIN
+C1 = Context("C1", ["C3", "C2", "C4", "C5", "C6"])
+C2 = Context("C2")
+C3 = Context("C3")
+C4 = Context("C4")
+C5 = Context("C5")
+C6 = Context("C6")
+
+x1 = Literal("x1", C1)
+a1 = Literal("a1", C1)
+a2 = Literal("a2", C2)
+a3 = Literal("a3", C3)
+a4 = Literal("a4", C4)
+a5 = Literal("a5", C5)
+a6 = Literal("a6", C6)
+
+rl11 = LocalStrictRule(x1, {a1})
+rm12 = DefeasibleRule(a1, {a2})
+rm13 = DefeasibleRule(a1.negation, {a3,a4})
+
+rm21 = DefeasibleRule(a2, {a5})
+rm22 = DefeasibleRule(a2.negation, {a6})
+
+rl31 = LocalStrictRule(a3)
+rl41 = LocalStrictRule(a4)
+rl51 = LocalStrictRule(a5)
+
+rd61 = DefeasibleRule(a6)
+rl62 = LocalStrictRule(a6.negation)
+
+
+print(p2p_dr(a4, C1))
 
 
 
