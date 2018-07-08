@@ -1,0 +1,1 @@
+python3 ./main.py -d ex5_bikakis -f C1 C2 C3 C4

@@ -1,0 +1,4 @@
+#classroom manager
+L1: -> projector(off)_local
+
+M1: projector(off)_peerC4, detected(1)_peerC5 -> ~class-activity_peerC4

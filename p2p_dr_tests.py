@@ -12,12 +12,12 @@ class TestP2P_DR(unittest.TestCase):
         self.C6 = Context("C6")
 
     def test_rank(self):
-        self.assertEqual(rank(Literal("x", C2), self.C1.preferences), 2)
-        self.assertEqual(rank(Literal("x", C3), self.C1.preferences), 1)
-        self.assertEqual(rank(Literal("x", C4), self.C1.preferences), 3)
-        self.assertEqual(rank(Literal("x", C5), self.C1.preferences), 4)
-        self.assertEqual(rank(Literal("x", C6), self.C1.preferences), 5)
-        self.assertEqual(rank(Literal("x", C1), self.C1.preferences), 0)
+        self.assertEqual(self.C1.rank(Literal("x", self.C2)), 2)
+        self.assertEqual(self.C1.rank(Literal("x", self.C3)), 1)
+        self.assertEqual(self.C1.rank(Literal("x", self.C4)), 3)
+        self.assertEqual(self.C1.rank(Literal("x", self.C5)), 4)
+        self.assertEqual(self.C1.rank(Literal("x", self.C6)), 5)
+        self.assertEqual(self.C1.rank(Literal("x", self.C1)), 0)
 
 
 if __name__ == '__main__':

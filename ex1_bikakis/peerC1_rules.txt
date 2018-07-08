@@ -1,0 +1,10 @@
+#local knowledge of mobile phone (current perceptions)
+L1: -> incoming-call_local
+L2: -> normal-mode_local
+
+#defeasible rules that encode Dr. Amber's preferences:
+M1: incoming-call_peerC1, ~lecture_peerC1 -> ring_peerC1
+M2: silent-mode_peerC1 -> ~ring_peerC1
+
+M3: classtime_peerC2, location-RA201_peerC3 -> lecture_peerC1
+M4: ~class-activity_peerC4 -> ~lecture_peerC1

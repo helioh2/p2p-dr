@@ -1,0 +1,2 @@
+#local knowledge (perceptions) of Ambers's laptop
+L1: -> classtime_local

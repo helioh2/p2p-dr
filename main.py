@@ -36,10 +36,13 @@ def save_literal(literal_text, context):
 def create_contexts_and_preferences():
     for arg in argv[files_mark+1:]:
         CONTEXTS[arg] = Context(arg)
-        with open(DIRECTORY+"/peer"+arg+"_trust.txt", "r") as f:
-            mylist = f.read().splitlines()
-            preferences = [x.strip() for x in mylist if x != ""]
-            CONTEXTS[arg].preferences = preferences
+        try:
+            with open(DIRECTORY+"/peer"+arg+"_trust.txt", "r") as f:
+                mylist = f.read().splitlines()
+                preferences = [x.split("peer")[-1].strip() for x in mylist if x != ""]
+                CONTEXTS[arg].preferences = preferences
+        except:
+            pass
 
 def create_literals_and_rules_by_context():
     for arg in argv[files_mark+1:]:
@@ -54,7 +57,6 @@ def create_literals_and_rules_by_context():
                 
                 body = set()
                 for x in literals_body:
-                    # print(x)
                     body.add(save_literal(x, arg))                                               
                 head = save_literal(head_text, arg)
 
@@ -77,9 +79,10 @@ def main_loop():
     while True:
         literal = input("Type query (literal): ")
         if literal[0] == "~":
-            print(p2p_dr(LITERALS[literal[1:]].negation, CONTEXTS[context]))
+            value, ss, bs = CONTEXTS[context].p2p_dr(LITERALS[literal[1:]].negation)
         else:
-            print(p2p_dr(LITERALS[literal], CONTEXTS[context]))
+            value, ss, bs = CONTEXTS[context].p2p_dr(LITERALS[literal])
+        print(value, [str(x) for x in ss], [str(x) for x in bs])
 
 
 #MAIN

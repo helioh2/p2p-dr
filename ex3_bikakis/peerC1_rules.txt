@@ -1,0 +1,4 @@
+L1: a1_local -> x1_local
+
+M1: a2_peerC2 -> a1_peerC1
+M2: a3_peerC3, a4_peerC4 -> ~a1_peerC1
